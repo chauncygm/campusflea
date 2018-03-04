@@ -9,43 +9,28 @@ import org.nutz.dao.entity.annotation.Table;
 public class User {
 
     @Id
+    @Column("user_id")
     @Comment("用户id")
-    private int id;
+    private int userId;
 
-    @Column
+    @Column("nick_name")
     @Comment("用户昵称")
     private String nickname;
 
-    @Column
+    @Column("real_name")
     @Comment("真实姓名")
     private String realname;
 
-    @Column
-    @Comment("账号密码")
-    private String password;
+    @Column("avatar")
+    @Comment("头像")
+    private String avatar;
 
-    @Column
-    @Comment("绑定手机号")
-    private String mobile;
+    @Column("introduce")
+    @Comment("个人介绍")
+    private String introduce;
 
-    @Column
-    @Comment("邮箱账号")
-    private String email;
+    @Column("credit_score")
+    @Comment("信用积分")
+    private int creditScore = 500;
 
-    @Column
-    @Comment("是否有效：1有效，0无效")
-    private int is_effect;
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nickname='" + nickname + '\'' +
-                ", realname='" + realname + '\'' +
-                ", password='" + password + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", email='" + email + '\'' +
-                ", is_effect=" + is_effect +
-                '}';
-    }
 }
