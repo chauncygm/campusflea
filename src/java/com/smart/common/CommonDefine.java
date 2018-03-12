@@ -13,7 +13,7 @@ public class CommonDefine {
     private static final String CONF_COMMON_PATH = "extra/common.properties";
     private static final String INIT_CREDIT_SCORE_FIELD = "init_credit_score";
 
-    private static Properties properties = new Properties();
+    private static Properties Prop = new Properties();
 
     static  {
         load();
@@ -22,11 +22,14 @@ public class CommonDefine {
     public static void load() {
         try {
             String path = Thread.currentThread().getContextClassLoader().getResource(CONF_COMMON_PATH).getPath();
-            properties.load(new FileInputStream(path));
+            Prop.load(new FileInputStream(path));
         } catch (IOException e) {
             e.printStackTrace();
             logger.error("加载配置文件:" + CONF_COMMON_PATH + " 出错");
         }
     }
 
+    public Object getKey(String key) {
+        return Prop.get(key);
+    }
 }

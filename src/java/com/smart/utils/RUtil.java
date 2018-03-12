@@ -99,7 +99,7 @@ public class RUtil {
     public static String randomStr(int length) {
         StringBuilder builder = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
-            builder.append(UPPER_CASE_CHARS.concat(LOWER_CASE_CHARS).charAt(UPPER_CASE_CHARS.length() + LOWER_CASE_CHARS.length()));
+            builder.append(UPPER_CASE_CHARS.concat(LOWER_CASE_CHARS).charAt(random(UPPER_CASE_CHARS.length() + LOWER_CASE_CHARS.length() -1)));
         }
         return builder.toString();
     }
@@ -113,14 +113,15 @@ public class RUtil {
         StringBuilder builder = new StringBuilder(length);
         String temp = UPPER_CASE_CHARS + LOWER_CASE_CHARS + NUMBER_CHARS;
         for (int i = 0; i < length; i++) {
-            builder.append(temp.charAt(random(temp.length())));
+            builder.append(temp.charAt(random(temp.length() - 1)));
         }
         return builder.toString();
     }
 
     public static void main(String[] args) {
-        PropertyConfigurator.configure("extra/log4j.properties ");
-        System.out.println(random(5, 8));
-        System.out.println(random(-1));
+//        PropertyConfigurator.configure("conf/log4j.properties ");
+//        System.out.println(random(5, 8));
+        System.out.println(randomChar(24));
+//        System.out.println(random(-1));
     }
 }

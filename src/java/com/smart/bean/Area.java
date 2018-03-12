@@ -18,7 +18,7 @@ public class Area {
     private int areaName;
 
     @Column("level")
-    @Comment("地区级别？1省：2市：3区县")
+    @Comment("地区级别？1省：2市：3区县：4直辖市")
     private int level;
 
     @Column("father_area")

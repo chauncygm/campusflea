@@ -1,9 +1,6 @@
 package com.smart.bean;
 
-import org.nutz.dao.entity.annotation.Column;
-import org.nutz.dao.entity.annotation.Comment;
-import org.nutz.dao.entity.annotation.Id;
-import org.nutz.dao.entity.annotation.Table;
+import org.nutz.dao.entity.annotation.*;
 
 import java.util.Date;
 
@@ -14,6 +11,11 @@ public class Account {
     @Column("account_id")
     @Comment("账号id")
     private int accountId;
+
+    @Name
+    @Column("username")
+    @Comment("用户名")
+    private String username;
 
     @Column("password")
     @Comment("账号密码")
@@ -33,8 +35,9 @@ public class Account {
 
     public Account() {}
 
-    public Account(String mobile, String password) {
+    public Account(String username, String mobile, String password) {
         this.isEffect = 1;
+        this.username = username;
         this.mobile = mobile;
         this.password = password;
     }
@@ -45,6 +48,14 @@ public class Account {
 
     public void setAccountId(int accountId) {
         this.accountId = accountId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

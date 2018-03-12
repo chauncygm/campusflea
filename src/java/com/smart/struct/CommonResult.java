@@ -3,29 +3,28 @@ package com.smart.struct;
 public class CommonResult {
 
     /**
-     * 返回码
+     * response code
      */
     private int code;
 
     /**
-     * 返回信息
+     * response message
      */
     private String msg;
 
     /**
-     * 返回数据
+     * response data
      */
     private Object data;
 
     /**
-     * 返回token
+     * auth token
      */
     private String token;
 
     public CommonResult() {}
 
     public CommonResult(int code, String msg) {
-
         this.code = code;
         this.msg = msg;
     }
@@ -36,10 +35,10 @@ public class CommonResult {
         this.data = data;
     }
 
-    public CommonResult(int code, Object data, String msg, String token) {
+    public CommonResult(int code, String msg, Object data, String token) {
         this.code = code;
-        this.data = data;
         this.msg = msg;
+        this.data = data;
         this.token = token;
     }
 

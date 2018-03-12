@@ -35,4 +35,8 @@ public class CommonString {
         }
     }
 
+    public static Object getKey(String key) {
+        return Tip.get(key);
+    }
+
 }

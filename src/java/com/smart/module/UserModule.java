@@ -1,100 +1,153 @@
 package com.smart.module;
 
 import com.smart.bean.Account;
-import com.smart.struct.CommonResult;
+import com.smart.common.Constant;
 import com.smart.dao.UserDao;
-import com.smart.struct.ResultMgr;
-import com.smart.utils.Md5Util;
-import com.smart.utils.StringUtil;
-import com.sun.org.apache.bcel.internal.generic.RET;
+import com.smart.struct.CommonResult;
+import com.smart.struct.LoginPara;
+import com.smart.utils.*;
 import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.mvc.annotation.At;
 import org.nutz.mvc.annotation.Param;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
 
 @At("/user")
 public class UserModule {
 
     private static final Logger logger = Logger.getLogger(UserModule.class);
 
+    private static final int CAPTCHA_CODE_LENGTH = 6;
+    private static final int EXPIRE_TIME = 60 * 1000;
+
+    /**
+     * user captcha map
+     * key: mobile | value: captcha code
+     */
+    private static final ConcurrentHashMap<String, String> userCaptchaMap = new ConcurrentHashMap<>();
+
     @Inject
     private UserDao userDao;
 
     /**
-     * 检测手机号是否已被注册
+     * check the username
+     * @param username
+     * @return
+     */
+    @At
+    public Object checkUserName(@Param("username") String username) {
+        if (StringUtil.isBlank(username)) {
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the username is empty or null");
+        }
+        if (userDao.checkUserName(username)) {
+            return  new CommonResult(Constant.RECODE_USERNAME_USED, "the username has been used");
+        }
+        return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok");
+    }
+
+    /**
+     * check the mobile number
      * @param mobile
      * @return
      */
     @At
     public Object checkAccount(@Param("mobile") String mobile) {
         if (StringUtil.isBlank(mobile)) {
-            logger.debug("参数为空");
-            return ResultMgr.paramError();
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile number is empty or null");
         }
-        if (!userDao.count(mobile)) {
-            logger.info(mobile + "已被注册");
-            return ResultMgr.success("该手机号已被注册", false);
+        if (!userDao.checkMobileNumber(mobile)) {
+            return new CommonResult(Constant.RESCODE_MOBILE_HASREGISTERD, "the mobile number has be register");
         }
-        return ResultMgr.success(true);
+        return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok");
     }
 
     /**
-     * 用户注册
+     * send captcha code
      * @param mobile
-     * @param password
      * @return
      */
     @At
-    public Object addUser(@Param("mobile") String mobile,@Param("password") String password) {
-        if (StringUtil.isBlank(mobile) || StringUtil.isBlank(password)) {
-            logger.debug("参数错误");
-            return ResultMgr.paramError();
+    public Object sendCaptchaCode(String mobile) {
+        CommonResult result = null;
+        if(!ValidateUtil.checkMobileNum(mobile,result)) {
+            return result;
+        }
+        String captchaCode = RUtil.randomNum(CAPTCHA_CODE_LENGTH);
+        try {
+            //send captcha code to user's mobile
+
+            long now = new Date().getTime();
+            userCaptchaMap.put(mobile, captchaCode + (now + EXPIRE_TIME));
+        } catch (Exception e) {
+            return new CommonResult(Constant.RESCODE_OPERATE_FAIL, "send captcha code failed");
+        }
+        return new CommonResult(Constant.RESCODE_OPERATE_SUCCEED, "send captcha code success");
+    }
+
+    /**
+     * user register
+     * @param loginPara register info
+     * @return
+     */
+    @At
+    public Object addUser(@Param("..") LoginPara loginPara) {
+        CommonResult result = null;
+        //check register param
+        if (!ValidateUtil.checkLoginPara(loginPara, result)) {
+            return result;
+        }
+        //check the captcha code
+        if (userCaptchaMap.get(loginPara.getMobile()) == null) {
+            return new CommonResult(Constant.RESCODE_CAPTCHACODE_ERROR, "no captcha code find");
+        }
+        if (!loginPara.getCaptchaCode().equalsIgnoreCase(userCaptchaMap.get(loginPara.getMobile()).substring(0,6))) {
+            return new CommonResult(Constant.RESCODE_CAPTCHACODE_ERROR, "captcha code is error");
         }
         long now = new Date().getTime();
-        String pswd = Md5Util.md5(password + String.valueOf(now));
-        Account account = new Account(mobile, pswd);
-        account.setCreatTime(now);
-        try {
-            userDao.insert(account);
-            logger.info("新用户注册成功！" + account);
-            return ResultMgr.success("注册成功", true);
-        } catch (Exception e) {
-            logger.info("用户注册失败！" + account);
-            return ResultMgr.error();
+        if (now > Long.valueOf(userCaptchaMap.get(loginPara.getMobile()).substring(6))) {
+            return new CommonResult(Constant.RESCODE_CAPTCHACODE_TIMEOUT, "captcha code has been timeout");
         }
+        //persist user to database
+        try {
+            //md5 encrypt the password with the salt(create time);
+            String pswd = Md5Util.md5(loginPara.getPassword() + String.valueOf(now));
+            Account account = new Account(loginPara.getUsername(), loginPara.getMobile(), pswd);
+            account.setCreatTime(now);
+            userDao.insert(account);
+        } catch (Exception e) {
+            return new CommonResult(Constant.RESCODE_OPERATE_FAIL, "register failed");
+        }
+        return new CommonResult(Constant.RESCODE_OPERATE_SUCCEED, "register succeed");
     }
 
     /**
-     * 登录
-     * @param mobile
-     * @param password
+     * login
+     * @param loginPara
      * @return
      */
     @At
-    public Object login(@Param("mobile") String mobile,
-                        @Param("password") String password, HttpServletRequest requset) {
-
-        if (StringUtil.isBlank(mobile) || StringUtil.isBlank(password)) {
-            logger.info("参数不能为空");
-            return ResultMgr.paramError();
+    public Object login(@Param("..") LoginPara loginPara) {
+        CommonResult result = null;
+        if (ValidateUtil.checkUserName(loginPara.getUsername(), result)
+                || ValidateUtil.checkMobileNum(loginPara.getMobile(), result)) {
+            return result;
         }
-        if (StringUtil.isMobileNum(mobile)) {
-            logger.info("错误的手机号！" + mobile);
-            return ResultMgr.success("错误的手机号", false);
+        try {
+            Account account = userDao.getAccount(loginPara.getUsername(), loginPara.getMobile());
+            if (account == null) {
+                return new CommonResult(Constant.RESCODE_USER_NOTEXIST, "user not exist");
+            }
+            String password = Md5Util.md5(loginPara.getPassword() +account.getCreatTime());
+            if (!account.getPassword().equals(password)) {
+                return new CommonResult(Constant.RESCODE_PASSWORD_ERROR, "password error");
+            }
+            String token = JwtHelper.createJWT(String.valueOf(account.getAccountId()), account.getUsername(), Constant.TOKEN_EXPIRE_TIME, Constant.SECRETKEY);
+            return new CommonResult(Constant.RESCODE_REQUEST_OK, "login succeed", null, token);
+        } catch (Exception e) {
+            return  new CommonResult(Constant.RESCODE_REQUEST_ERROR, "login failed");
         }
-        Account account = userDao.findAccount(mobile);
-        if (account == null) {
-            logger.info("未注册的手机号" + mobile);
-            return ResultMgr.success("用户不存在", false);
-        }
-        String pswd = Md5Util.md5(password + account.getCreatTime());
-        if (!account.getPassword().equals(pswd)) {
-            return ResultMgr.success("密码不匹配", false);
-        }
-        return ResultMgr.success();
     }
 
 }

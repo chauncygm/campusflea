@@ -10,12 +10,10 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
 import java.util.Date;
 
-public class JWTUtil {
+public class JwtHelper {
 
-    private static final String SECRET_KEY = "xxxxxxxxxxxx";
-
-    //Sample method to construct a JWT
-    private String createJWT(String id, String issuer, String subject, long ttlMillis) {
+    //construct a JWT
+    public static String createJWT(String id, String subject, long ttlMillis, String secretKey) {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -23,15 +21,14 @@ public class JWTUtil {
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
 
-        //We will sign our JWT with our ApiKey secret
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+        //generate the signature secret key
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
-        //Let's set the JWT Claims
+        //set the JWT Claims
         JwtBuilder builder = Jwts.builder().setId(id)
                 .setIssuedAt(now)
                 .setSubject(subject)
-                .setIssuer(issuer)
                 .signWith(signatureAlgorithm, signingKey);
 
         //if it has been specified, let's add the expiration
@@ -45,12 +42,16 @@ public class JWTUtil {
         return builder.compact();
     }
 
-    private Claims parseJWT(String jwt) {
+    public static Claims parseJWT(String jwt, String secretKey) {
 
         //This line will throw an exception if it is not a signed JWS (as expected)
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
-                .parseClaimsJws(jwt).getBody();
-        return claims;
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                    .parseClaimsJws(jwt).getBody();
+            return claims;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

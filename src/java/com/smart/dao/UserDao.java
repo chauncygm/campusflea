@@ -23,38 +23,40 @@ public class UserDao {
     private NutDao dao;
 
     /**
-     * 账号是否已被注册
-     * @param acount
+     * check the username has been used
+     * @param username
      * @return
      */
-    public boolean count(String acount) {
-        Cnd cnd = Cnd.where("mobile", "=",acount);
-        List<Account> list = dao.query(Account.class, cnd);
-        return list.isEmpty();
+    public boolean checkUserName(String username) {
+        Cnd cnd = Cnd.where("username", "=", username);
+        return dao.count(Account.class, cnd) > 0;
     }
 
-    /**
-     *
-     * @param account
-     * @return
-     */
-    public boolean add(Account account) {
-        return true;
-    }
 
     /**
-     * 是否存在用户
+     * check the mobile number has been register
      * @param mobile
      * @return
      */
-    public Account findAccount(String mobile) {
-        Cnd cnd = Cnd.where("mobile", "=", mobile);
+    public boolean checkMobileNumber(String mobile) {
+        Cnd cnd = Cnd.where("mobile", "=",mobile);
+        return dao.count(Account.class, cnd) > 0;
+    }
+
+    /**
+     * get Account by username or mobile number
+     * @param username
+     * @param mobile
+     * @return
+     */
+    public Account getAccount(String username, String mobile) {
+        Cnd cnd = Cnd.where("username", "=", username).or("mobile", "=", mobile);
         Account at = dao.fetch(Account.class, cnd);
         return at;
     }
 
     /**
-     * 通过id得到用户信息
+     * get user info by userId
      * @param userId
      * @return
      */
@@ -63,7 +65,7 @@ public class UserDao {
     }
 
     /**
-     * 查找是否同名
+     * check has same nickname
      * @param nickname
      * @return
      */
@@ -74,21 +76,11 @@ public class UserDao {
     }
 
     /**
-     * 添加用户
+     * add user
      * @param account
      */
     public void insert(Account account) {
         dao.insert(account);
     }
 
-
-    public boolean update(Account account) {
-        int update = dao.update(account);
-        return update > 0;
-    }
-
-    public boolean update(User user) {
-        int update = dao.update(user);
-        return update > 0;
-    }
 }

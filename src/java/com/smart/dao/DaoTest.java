@@ -44,6 +44,6 @@ public class DaoTest extends Assert {
 //        System.out.println(userDao.getUser(1));
 //        System.out.println(userDao.getUser(2));
 
-        userDao.insert(new Account("12121","343242"));
+//        userDao.insert(new Account("12121","343242"));
     }
 }
