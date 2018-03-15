@@ -3,18 +3,21 @@ package com.smart.module;
 import com.smart.bean.Account;
 import com.smart.common.Constant;
 import com.smart.dao.UserDao;
+import com.smart.filter.SignFilter;
 import com.smart.struct.CommonResult;
 import com.smart.struct.LoginPara;
 import com.smart.utils.*;
 import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
-import org.nutz.mvc.annotation.At;
-import org.nutz.mvc.annotation.Param;
+import org.nutz.ioc.loader.annotation.IocBean;
+import org.nutz.mvc.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 @At("/user")
+@IocBean
 public class UserModule {
 
     private static final Logger logger = Logger.getLogger(UserModule.class);
@@ -143,11 +146,32 @@ public class UserModule {
             if (!account.getPassword().equals(password)) {
                 return new CommonResult(Constant.RESCODE_PASSWORD_ERROR, "password error");
             }
-            String token = JwtHelper.createJWT(String.valueOf(account.getAccountId()), account.getUsername(), Constant.TOKEN_EXPIRE_TIME, Constant.SECRETKEY);
-            return new CommonResult(Constant.RESCODE_REQUEST_OK, "login succeed", null, token);
+            String token = JwtHelper.createJWT(String.valueOf(account.getAccountId()),
+                    account.getUsername() + account.getPassword(),
+                    Constant.TOKEN_EXPIRE_TIME, Constant.SECRETKEY);
+            return new CommonResult(Constant.RESCODE_REQUEST_OK, "login succeed", account.getAccountId(), token);
         } catch (Exception e) {
             return  new CommonResult(Constant.RESCODE_REQUEST_ERROR, "login failed");
         }
+    }
+
+    @At
+    @Filters(@By(type = SignFilter.class))
+    public Object resetPwd(@Param("id") String id, @Param("newPass") String newPass, HttpServletRequest request) {
+        return null;
+    }
+
+    @At
+    @Ok("json")
+    public String test() {
+        return "ojbk";
+    }
+
+    @At
+    @Ok("json")
+    @Filters(@By(type = SignFilter.class))
+    public String testtoken(@Param("id") String id) {
+        return "complete objk";
     }
 
 }

@@ -1,7 +1,6 @@
 package com.smart;
 
 import com.smart.dao.UserDao;
-import org.nutz.dao.impl.NutDao;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;

@@ -4,15 +4,9 @@ import com.smart.bean.Account;
 import com.smart.bean.User;
 import org.apache.log4j.Logger;
 import org.nutz.dao.Cnd;
-import org.nutz.dao.Sqls;
 import org.nutz.dao.impl.NutDao;
-import org.nutz.dao.sql.Sql;
-import org.nutz.dao.util.cri.SqlExpression;
-import org.nutz.dao.util.cri.SqlExpressionGroup;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
-
-import java.util.List;
 
 @IocBean
 public class UserDao {
@@ -53,6 +47,15 @@ public class UserDao {
         Cnd cnd = Cnd.where("username", "=", username).or("mobile", "=", mobile);
         Account at = dao.fetch(Account.class, cnd);
         return at;
+    }
+
+    /**
+     * get Account by account_id
+     * @param id
+     * @return
+     */
+    public Account getAccount(int id) {
+        return dao.fetch(Account.class, id);
     }
 
     /**

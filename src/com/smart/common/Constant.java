@@ -32,7 +32,7 @@ public class Constant {
 
     public static final int RESCODE_REQUEST_ERROR = 500;            //request error
 
-    public static final int RESCODE_TOKEN_ERROR = 700;              //token invalid
+    public static final int RESCODE_TOKEN_INVALID = 700;            //token invalid
 
     public static final int RESCODE_TOKEN_EXPIRE = 701;             //token expired
 
