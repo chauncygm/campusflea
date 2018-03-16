@@ -41,4 +41,14 @@ public class LoginPara {
     public void setCaptchaCode(String captchaCode) {
         this.captchaCode = captchaCode;
     }
+
+    @Override
+    public String toString() {
+        return "LoginPara{" +
+                "username='" + username + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", password='" + password + '\'' +
+                ", captchaCode='" + captchaCode + '\'' +
+                '}';
+    }
 }

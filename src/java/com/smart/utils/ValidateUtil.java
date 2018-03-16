@@ -22,54 +22,51 @@ public class ValidateUtil {
         return matcher.matches();
     }
 
-    public static boolean checkUserName(String username, CommonResult result) {
+    public static CommonResult checkUserName(String username) {
         if (StringUtil.isBlank(username)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the username is empty or null");
-            return false;
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the username is empty or null");
         }
         if (!check(username, USERNAME_REGX)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the username is illegal");
-            return false;
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the username is illegal");
         }
-        return true;
+        return null;
     }
 
-    public static boolean checkMobileNum(String mobile, CommonResult result) {
+    public static CommonResult checkMobileNum(String mobile) {
         if (StringUtil.isBlank(mobile)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile is empty or null");
-            return false;
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile is empty or null");
         }
-        if (!check(mobile, USERNAME_REGX)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile is illegal");
-            return false;
+        if (!check(mobile, MOBILE_REGX)) {
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile is illegal");
         }
-        return true;
+        return null;
     }
 
-    public static boolean checkPwd(String password, CommonResult result) {
+    public static CommonResult checkPwd(String password) {
         if (StringUtil.isBlank(password)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the password is empty or null");
-            return false;
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the password is empty or null");
         }
-        if (!check(password, USERNAME_REGX)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the password is illegal");
-            return false;
+        if (!check(password, PWD_REGX)) {
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the password is illegal");
         }
-        return true;
+        return null;
     }
 
-    public static boolean checkCaptchaCode(String code, CommonResult result) {
+    public static CommonResult checkCaptchaCode(String code) {
         if (StringUtil.isBlank(code)) {
-            result = new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the captcha code is empty or null");
-            return false;
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the captcha code is empty or null");
         }
-        return true;
+        return null;
     }
 
-    public static boolean checkLoginPara(LoginPara loginPara, CommonResult result) {
-        return checkUserName(loginPara.getUsername(), result)
-                && checkMobileNum(loginPara.getMobile(), result)
-                && checkPwd(loginPara.getPassword(), result)
-                && checkCaptchaCode(loginPara.getCaptchaCode(), result);
+    public static CommonResult checkLoginPara(LoginPara loginPara) {
+        CommonResult result = checkUserName(loginPara.getUsername());
+        if (result != null) return result;
+        result =checkMobileNum(loginPara.getMobile());
+        if (result != null) return result;
+        result = checkPwd(loginPara.getPassword());
+        if (result != null) return result;
+        result =checkCaptchaCode(loginPara.getCaptchaCode());
+        return result;
     }
 }

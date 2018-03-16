@@ -45,12 +45,11 @@ public class UserDao {
 
     /**
      * get Account by username or mobile number
-     * @param username
-     * @param mobile
+     * @param source username or mobile number
      * @return
      */
-    public Account getAccount(String username, String mobile) {
-        Cnd cnd = Cnd.where("username", "=", username).or("mobile", "=", mobile);
+    public Account getAccount(String source) {
+        Cnd cnd = Cnd.where("username", "=", source).or("mobile", "=", source);
         Account at = dao.fetch(Account.class, cnd);
         return at;
     }
