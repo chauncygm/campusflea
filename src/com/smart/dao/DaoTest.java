@@ -1,7 +1,6 @@
 package com.smart.dao;
 
 import com.smart.MainModule;
-import com.smart.bean.Account;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

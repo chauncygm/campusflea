@@ -12,6 +12,7 @@ import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -71,10 +72,12 @@ public class UserModule {
      * @return
      */
     @At
+    public Object sendCaptchaCode(String mobile) {
     @Ok("json")
     public Object sendCaptchaCode(@Param("mobile") String mobile) {
         System.out.println(mobile);
         CommonResult result = null;
+        if(!ValidateUtil.checkMobileNum(mobile,result)) {
         //check mobile number
         if ((result =ValidateUtil.checkMobileNum(mobile)) != null) {
             return result;
@@ -82,7 +85,6 @@ public class UserModule {
         String captchaCode = RUtil.randomNum(CAPTCHA_CODE_LENGTH);
         try {
             //send captcha code to user's mobile
-            System.out.println(captchaCode);
             long now = new Date().getTime();
             userCaptchaMap.put(mobile, captchaCode + (now + EXPIRE_TIME));
         } catch (Exception e) {
@@ -97,10 +99,10 @@ public class UserModule {
      * @return
      */
     @At
-    @Ok("json")
     public Object addUser(@Param("..") LoginPara loginPara) {
         CommonResult result = null;
         //check register param
+        if (!ValidateUtil.checkLoginPara(loginPara, result)) {
         if ((result = ValidateUtil.checkLoginPara(loginPara)) != null) {
             return result;
         }
@@ -138,6 +140,10 @@ public class UserModule {
     @Ok("json")
     public Object login(@Param("..") LoginPara loginPara) {
         CommonResult result = null;
+        if (ValidateUtil.checkUserName(loginPara.getUsername(), result)
+                || ValidateUtil.checkMobileNum(loginPara.getMobile(), result)) {
+            return result;
+        }
 //        if ((result =ValidateUtil.checkUserName(loginPara.getUsername())) != null
 //                && (result = ValidateUtil.checkMobileNum(loginPara.getMobile())) != null) {
 //            return result;
@@ -152,36 +158,32 @@ public class UserModule {
             if (!account.getPassword().equals(password)) {
                 return new CommonResult(Constant.RESCODE_PASSWORD_ERROR, "password error");
             }
-            String token = JwtHelper.createJWT(String.valueOf(account.getAccountId()), account.getUsername(),
-                    account.getPassword(), Constant.TOKEN_EXPIRE_TIME, Constant.SECRETKEY);
-            return new CommonResult(Constant.RESCODE_REQUEST_OK, "login succeed", null, token);
+            String token = JwtHelper.createJWT(String.valueOf(account.getAccountId()),
+                    account.getUsername() + account.getPassword(),
+                    Constant.TOKEN_EXPIRE_TIME, Constant.SECRETKEY);
+            return new CommonResult(Constant.RESCODE_REQUEST_OK, "login succeed", account.getAccountId(), token);
         } catch (Exception e) {
             return  new CommonResult(Constant.RESCODE_REQUEST_ERROR, "login failed");
         }
     }
 
     @At
+    @Filters(@By(type = SignFilter.class))
+    public Object resetPwd(@Param("id") String id, @Param("newPass") String newPass, HttpServletRequest request) {
+        return null;
+    }
+
+    @At
     @Ok("json")
-    @Filters(@By(type=SignFilter.class))
-    public Object resetPassword(@Param("id") String id, @Param("newpass") String newpass) {
-        CommonResult result = null;
-        return result;
+    public String test() {
+        return "ojbk";
     }
 
     @At
     @Ok("json")
     @Filters(@By(type = SignFilter.class))
-    public String requestJWT() {
-        System.out.println("ooooooooooooooooooooookkkkkkkkkkkkkkk");
-        return Constant.SECRETKEY;
+    public String testtoken(@Param("id") String id) {
+        return "complete objk";
     }
-
-    @At
-    @GET
-    @Ok("json")
-    public String test() {
-        return "111111111111111111";
-    }
-
 
 }

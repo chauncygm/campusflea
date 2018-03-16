@@ -1,7 +1,6 @@
 package com.smart.utils;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
 import java.util.Random;
 
