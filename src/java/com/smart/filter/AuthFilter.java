@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Filters
 @IocBean
-public class SignFilter implements ActionFilter{
+public class AuthFilter implements ActionFilter{
 
     @Override
     public View match(ActionContext context) {

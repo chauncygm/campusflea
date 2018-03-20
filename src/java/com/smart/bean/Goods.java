@@ -4,6 +4,7 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Comment;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
+import org.nutz.mvc.annotation.Param;
 
 @Table("t_goods")
 public class Goods {
@@ -20,6 +21,10 @@ public class Goods {
     @Column("good_name")
     @Comment("商品名")
     private String goodName;
+
+    @Column("category_id")
+    @Comment("类型id")
+    private int categoryId;
 
     @Column("title")
     @Comment("标题")
@@ -44,6 +49,14 @@ public class Goods {
     @Column("content")
     @Comment("内容")
     private String content;
+
+    @Column("put_time")
+    @Comment("发布时间")
+    private int putTime;
+
+    @Column("deadline")
+    @Comment("截止时间")
+    private int deadline;
 
     @Column("view_num")
     @Comment("浏览数")
@@ -83,6 +96,14 @@ public class Goods {
 
     public void setGoodName(String goodName) {
         this.goodName = goodName;
+    }
+
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getTitle() {
@@ -133,6 +154,22 @@ public class Goods {
         this.content = content;
     }
 
+    public int getPutTime() {
+        return putTime;
+    }
+
+    public void setPutTime(int putTime) {
+        this.putTime = putTime;
+    }
+
+    public int getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(int deadline) {
+        this.deadline = deadline;
+    }
+
     public int getViewNum() {
         return viewNum;
     }
@@ -171,12 +208,15 @@ public class Goods {
                 "goodId=" + goodId +
                 ", userId=" + userId +
                 ", goodName='" + goodName + '\'' +
+                ", categoryId=" + categoryId +
                 ", title='" + title + '\'' +
                 ", subTitle='" + subTitle + '\'' +
                 ", primaryPrice=" + primaryPrice +
                 ", realPrice=" + realPrice +
                 ", goodPics='" + goodPics + '\'' +
                 ", content='" + content + '\'' +
+                ", putTime=" + putTime +
+                ", deadline=" + deadline +
                 ", viewNum=" + viewNum +
                 ", loveNum=" + loveNum +
                 ", collectNum=" + collectNum +

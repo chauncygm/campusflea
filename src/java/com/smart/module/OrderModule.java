@@ -2,7 +2,7 @@ package com.smart.module;
 
 import com.smart.bean.Order;
 import com.smart.dao.OrderDao;
-import com.smart.filter.SignFilter;
+import com.smart.filter.AuthFilter;
 import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -27,14 +27,14 @@ public class OrderModule {
 
     @At
     @Ok("json")
-    @Filters(@By(type= SignFilter.class))
+    @Filters(@By(type= AuthFilter.class))
     public Object addOrder() {
         return null;
     }
 
     @At
     @Ok("json")
-    @Filters(@By(type= SignFilter.class))
+    @Filters(@By(type= AuthFilter.class))
     private Object queryOrder() {
         return null;
     }

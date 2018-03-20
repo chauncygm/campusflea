@@ -4,7 +4,7 @@ import com.smart.bean.Message;
 import com.smart.common.Constant;
 import com.smart.dao.MessageDao;
 import com.smart.dao.UserDao;
-import com.smart.filter.SignFilter;
+import com.smart.filter.AuthFilter;
 import com.smart.struct.CommonResult;
 import org.apache.log4j.Logger;
 import org.nutz.dao.QueryResult;
@@ -32,7 +32,7 @@ public class ChatModule {
      */
     @At
     @Ok("json")
-    @Filters(@By(type= SignFilter.class))
+    @Filters(@By(type= AuthFilter.class))
     public Object history(@Param("id") int id, @Param("oid") int oid, Pager pager) {
         if (!userDao.isExist(oid)) {
             return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "oid not exist");

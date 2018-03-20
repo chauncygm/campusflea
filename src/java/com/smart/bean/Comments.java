@@ -25,6 +25,14 @@ public class Comments {
     @Comment("回复评论的id")
     private int replyId;
 
+    @Column("content")
+    @Comment("评论内容")
+    private String content;
+
+    @Column("time")
+    @Comment("评论时间")
+    private long time;
+
     @Column("is_delete")
     @Comment("是否已删除？0未删除：1已删除")
     private int isDelete;
@@ -61,6 +69,22 @@ public class Comments {
         this.replyId = replyId;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     public int getIsDelete() {
         return isDelete;
     }
@@ -71,11 +95,13 @@ public class Comments {
 
     @Override
     public String toString() {
-        return "Comment{" +
+        return "Comments{" +
                 "commentId=" + commentId +
                 ", goodsId=" + goodsId +
                 ", userId=" + userId +
                 ", replyId=" + replyId +
+                ", content='" + content + '\'' +
+                ", time=" + time +
                 ", isDelete=" + isDelete +
                 '}';
     }

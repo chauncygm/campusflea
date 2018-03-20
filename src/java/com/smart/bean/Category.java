@@ -13,7 +13,7 @@ public class Category {
     @Comment("分类id")
     private int cateId;
 
-    @Column("cate_name")
+    @Column("category_name")
     @Comment("分类名称")
     private String cateName;
 

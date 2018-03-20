@@ -3,7 +3,7 @@ package com.smart.module;
 import com.smart.bean.Account;
 import com.smart.common.Constant;
 import com.smart.dao.AccountDao;
-import com.smart.filter.SignFilter;
+import com.smart.filter.AuthFilter;
 import com.smart.service.SMS;
 import com.smart.struct.CommonResult;
 import com.smart.struct.LoginPara;
@@ -163,7 +163,7 @@ public class AccountModule {
 
     @At
     @Ok("json")
-    @Filters(@By(type = SignFilter.class))
+    @Filters(@By(type = AuthFilter.class))
     public Object resetPwd(@Param("id") String id, @Param("newPass") String newPass, HttpServletRequest request) {
         CommonResult result = null;
         if ((result = ValidateUtil.checkPwd(newPass)) != null) {
@@ -191,7 +191,7 @@ public class AccountModule {
 
     @At
     @Ok("json")
-    @Filters(@By(type = SignFilter.class))
+    @Filters(@By(type = AuthFilter.class))
     public String testtoken(@Param("id") String id) {
         return "complete objk";
     }

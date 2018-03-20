@@ -13,7 +13,7 @@ public class Campus {
     @Comment("学校id")
     private int id;
 
-    @Column("name")
+    @Column("campus_name")
     @Comment("学校名")
     private String name;
 
