@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ValidateUtil {
 
-    private static final String USERNAME_REGX = "[\\u4e00-\\u9fa5_a-zA-Z0-9_]{4,10}";
+    private static final String USERNAME_REGX = "^[\\u4e00-\\u9fa5_a-zA-Z0-9]{4,10}$";
 
     private static final String MOBILE_REGX = "^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$";
 

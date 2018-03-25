@@ -27,7 +27,7 @@ public class MainSetup implements Setup {
         Dao dao = ioc.get(Dao.class, "dao");
         DaoManager.getInstance().setAccountDao(ioc.get(AccountDao.class,"accountDao"));
         //force: recreate table if the table exist
-        Daos.createTablesInPackage(dao,"com.smart.bean",true);
+        Daos.createTablesInPackage(dao,"com.smart.bean",false);
         logger.info("connect database completely");
         logger.info("--------MainSetup success--------");
     }

@@ -3,6 +3,7 @@ package com.smart.module;
 import com.smart.bean.Account;
 import com.smart.common.Constant;
 import com.smart.dao.AccountDao;
+import com.smart.filter.AccessControlFilter;
 import com.smart.filter.AuthFilter;
 import com.smart.service.SMS;
 import com.smart.struct.CommonResult;
@@ -14,6 +15,8 @@ import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.rmi.AccessException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,6 +28,8 @@ public class AccountModule {
 
     private static final int CAPTCHA_CODE_LENGTH = 6;
     private static final int EXPIRE_TIME = 60 * 1000;
+    private static final String REGIST_TYPE = "_regist";
+    private static final String RESETPASS_TYPE = "_reset_pass";
 
     /**
      * user captcha map
@@ -42,9 +47,11 @@ public class AccountModule {
      */
     @At
     @Ok("json")
+    @Filters(@By(type= AccessControlFilter.class))
     public Object checkUserName(@Param("username") String username) {
-        if (StringUtil.isBlank(username)) {
-            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the username is empty or null");
+        CommonResult result = null;
+        if ((result = ValidateUtil.checkUserName(username)) != null) {
+            return result;
         }
         if (accountDao.checkUserName(username)) {
             return  new CommonResult(Constant.RECODE_USERNAME_USED, "the username has been used");
@@ -59,6 +66,7 @@ public class AccountModule {
      */
     @At
     @Ok("json")
+    @Filters(@By(type= AccessControlFilter.class))
     public Object checkAccount(@Param("mobile") String mobile) {
         if (StringUtil.isBlank(mobile)) {
             return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile number is empty or null");
@@ -76,7 +84,8 @@ public class AccountModule {
      */
     @At
     @Ok("json")
-    public Object sendCaptchaCode(@Param("mobile") String mobile) {
+    @Filters(@By(type= AccessControlFilter.class))
+    public Object sendCaptchaCode(@Param("mobile") String mobile, @Param("type") String type) {
         CommonResult result = null;
         if ((result = ValidateUtil.checkMobileNum(mobile)) != null) {
             return result;
@@ -84,7 +93,7 @@ public class AccountModule {
         String captchaCode = RUtil.randomNum(CAPTCHA_CODE_LENGTH);
         if (SMS.sendCaptchaCode(mobile, captchaCode)) {
             long now = new Date().getTime();
-            userCaptchaMap.put(mobile, captchaCode + (now + EXPIRE_TIME));
+            userCaptchaMap.put(mobile + type, captchaCode + (now + EXPIRE_TIME));
             return new CommonResult(Constant.RESCODE_OPERATE_SUCCEED, "send captcha code success");
         }
         return new CommonResult(Constant.RESCODE_OPERATE_FAIL, "send captcha code failed");
@@ -97,6 +106,7 @@ public class AccountModule {
      */
     @At
     @Ok("json")
+    @Filters(@By(type= AccessControlFilter.class))
     public Object register(@Param("..") LoginPara loginPara) {
         CommonResult result = null;
         //check register param
@@ -104,14 +114,14 @@ public class AccountModule {
             return result;
         }
         //check the captcha code
-        if (userCaptchaMap.get(loginPara.getMobile()) == null) {
+        if (userCaptchaMap.get(loginPara.getMobile() + REGIST_TYPE) == null) {
             return new CommonResult(Constant.RESCODE_CAPTCHACODE_ERROR, "no captcha code find");
         }
-        if (!loginPara.getCaptchaCode().equalsIgnoreCase(userCaptchaMap.get(loginPara.getMobile()).substring(0,6))) {
+        if (!loginPara.getCaptchaCode().equalsIgnoreCase(userCaptchaMap.get(loginPara.getMobile() + REGIST_TYPE).substring(0,6))) {
             return new CommonResult(Constant.RESCODE_CAPTCHACODE_ERROR, "captcha code is error");
         }
         long now = new Date().getTime();
-        if (now > Long.valueOf(userCaptchaMap.get(loginPara.getMobile()).substring(6))) {
+        if (now > Long.valueOf(userCaptchaMap.get(loginPara.getMobile() + REGIST_TYPE).substring(6))) {
             return new CommonResult(Constant.RESCODE_CAPTCHACODE_TIMEOUT, "captcha code has been timeout");
         }
         //persist user to database
@@ -124,8 +134,15 @@ public class AccountModule {
             return new CommonResult(Constant.RESCODE_OPERATE_SUCCEED, "register succeed");
         } catch (Exception e) {
             logger.error("user register faild: " + loginPara);
+            return new CommonResult(Constant.RESCODE_OPERATE_FAIL, "register failed");
         }
-        return new CommonResult(Constant.RESCODE_OPERATE_FAIL, "register failed");
+    }
+
+    @At
+    @Ok("json")
+    @Filters(@By(type=AccessControlFilter.class))
+    public Object forgetPassword() {
+        return null;
     }
 
     /**
@@ -135,11 +152,12 @@ public class AccountModule {
      */
     @At
     @Ok("json")
-    public Object login(@Param("username") String username, @Param("password") String password) {
+    @Filters(@By(type= AccessControlFilter.class))
+    public Object login(@Param("username") String username, @Param("password") String password,
+                        HttpServletResponse response) {
         CommonResult result = null;
         //check username is right username or mobile number
-        if ((result =ValidateUtil.checkUserName(username)) != null
-                && (result = ValidateUtil.checkMobileNum(username)) != null) {
+        if ((result =ValidateUtil.checkUserName(username)) != null) {
             return result;
         }
         try {
@@ -163,7 +181,7 @@ public class AccountModule {
 
     @At
     @Ok("json")
-    @Filters(@By(type = AuthFilter.class))
+    @Filters(@By(type= AccessControlFilter.class))
     public Object resetPwd(@Param("id") String id, @Param("newPass") String newPass, HttpServletRequest request) {
         CommonResult result = null;
         if ((result = ValidateUtil.checkPwd(newPass)) != null) {
@@ -191,9 +209,9 @@ public class AccountModule {
 
     @At
     @Ok("json")
-    @Filters(@By(type = AuthFilter.class))
-    public String testtoken(@Param("id") String id) {
-        return "complete objk";
+    @Filters({@By(type = AuthFilter.class),@By(type= AccessControlFilter.class)})
+    public CommonResult testtoken(@Param("id") String id) {
+        return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok");
     }
 
 }

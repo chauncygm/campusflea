@@ -39,11 +39,11 @@ public class AccountDao {
 
     /**
      * get Account by username or mobile number
-     * @param source username or mobile number
+     * @param account
      * @return
      */
-    public Account getAccount(String source) {
-        Cnd cnd = Cnd.where("username", "=", source).or("mobile", "=", source);
+    public Account getAccount(String account) {
+        Cnd cnd = Cnd.where("username", "=", account);
         Account at = dao.fetch(Account.class, cnd);
         return at;
     }

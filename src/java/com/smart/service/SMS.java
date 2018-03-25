@@ -39,7 +39,7 @@ public class SMS {
     public static boolean sendCaptchaCode(String mobile, String code) {
 
         NameValuePair[] data ={
-                new NameValuePair("Uid", "dsfa"),
+                new NameValuePair("Uid", UID),
                 new NameValuePair("KeyMD5", MD5KEY),
                 new NameValuePair("smsMob", mobile),
                 new NameValuePair("smsText","验证码：" + code)
