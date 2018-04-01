@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class ValidateUtil {
 
-    private static final String USERNAME_REGX = "^[\\u4e00-\\u9fa5_a-zA-Z0-9]{4,10}$";
+    private static final String USERNAME_REGX = "^[_a-zA-Z0-9]{4,10}$";
 
     private static final String MOBILE_REGX = "^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\\d{8}$";
 
@@ -20,6 +20,16 @@ public class ValidateUtil {
         Pattern pattern = Pattern.compile(regx);
         Matcher matcher = pattern.matcher(source);
         return matcher.matches();
+    }
+
+    public static CommonResult checkAccount(String source) {
+        if (StringUtil.isBlank(source)) {
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the account is empty or null");
+        }
+        if (!check(source, USERNAME_REGX) && !check(source, MOBILE_REGX)) {
+            return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the account is illegal");
+        }
+        return null;
     }
 
     public static CommonResult checkUserName(String username) {
@@ -63,6 +73,15 @@ public class ValidateUtil {
         CommonResult result = checkUserName(loginPara.getUsername());
         if (result != null) return result;
         result =checkMobileNum(loginPara.getMobile());
+        if (result != null) return result;
+        result = checkPwd(loginPara.getPassword());
+        if (result != null) return result;
+        result =checkCaptchaCode(loginPara.getCaptchaCode());
+        return result;
+    }
+
+    public static CommonResult check(LoginPara loginPara) {
+        CommonResult result = checkMobileNum(loginPara.getMobile());
         if (result != null) return result;
         result = checkPwd(loginPara.getPassword());
         if (result != null) return result;

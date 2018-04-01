@@ -1,6 +1,7 @@
 package com.smart.service;
 
 
+import com.smart.utils.Log;
 import com.smart.utils.Md5Util;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -57,13 +58,13 @@ public class SMS {
             Header[] headers = post.getResponseHeaders();
             int statusCode = post.getStatusCode();
             String result = new String(post.getResponseBodyAsString().getBytes("utf-8"));
-            System.out.println("statusCode:"+statusCode);
-            logger.info("SMS send succeed: mobile [" + mobile + "] code [ "+ code + "] statusCode [" + statusCode + "] result [" + result +"]");
+            logger.info(String.format("SMS : mobile [ %s ] code [ %s ] statusCode [ %s ] result [ %s ]",
+                    mobile, code, statusCode, result));
             if (statusCode == 200 && Integer.valueOf(result) > 0) {
                 return true;
             }
         } catch (IOException e) {
-            logger.error("SMS send faild: mobile [" + mobile + "] code [ "+ code + "]");
+            logger.info(String.format("SMS : mobile [ %s ] code [ %s ]", mobile, code));
         } finally {
             post.releaseConnection();
         }

@@ -38,14 +38,25 @@ public class AccountDao {
     }
 
     /**
-     * get Account by username or mobile number
-     * @param account
+     * get Account by mobile
+     * @param mobile
      * @return
      */
-    public Account getAccount(String account) {
-        Cnd cnd = Cnd.where("username", "=", account);
-        Account at = dao.fetch(Account.class, cnd);
-        return at;
+    public Account getAccountByMobile(String mobile) {
+        Cnd cnd = Cnd.where("mobile", "=", mobile);
+        Account account = dao.fetch(Account.class, cnd);
+        return account;
+    }
+
+    /**
+     * get Account by username or mobile number
+     * @param source
+     * @return
+     */
+    public Account getAccount(String source) {
+        Cnd cnd = Cnd.where("username", "=", source).or("mobile", "=", source);
+        Account account = dao.fetch(Account.class, cnd);
+        return account;
     }
 
     /**
