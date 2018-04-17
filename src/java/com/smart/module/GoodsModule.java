@@ -48,7 +48,7 @@ public class GoodsModule {
     @At
     @Ok("json")
     @Filters(@By(type= AuthFilter.class))
-    @AdaptBy(type= UploadAdaptor.class, args={"${app.root}/WEB-INF/upload/goods"})
+    @AdaptBy(type= UploadAdaptor.class, args={"${app.root}/upload/goods"})
     public Object addGoods(@Param("..")Goods goods, @Param("picture")TempFile[] pictrues) {
         CommonResult result = null;
         for (TempFile tf : pictrues) {

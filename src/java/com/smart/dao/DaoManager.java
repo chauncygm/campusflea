@@ -1,7 +1,6 @@
 package com.smart.dao;
 
-import org.nutz.ioc.loader.annotation.Inject;
-import org.nutz.ioc.loader.annotation.IocBean;
+import com.smart.bean.Message;
 
 public class DaoManager {
 
@@ -22,6 +21,8 @@ public class DaoManager {
 
     private AccountDao accountDao;
 
+    private MessageDao messageDao;
+
     public AccountDao getAccountDao() {
         return accountDao;
     }
@@ -30,4 +31,11 @@ public class DaoManager {
         this.accountDao = accountDao;
     }
 
+    public MessageDao getMessageDao() {
+        return messageDao;
+    }
+
+    public void setMessageDao(MessageDao messageDao) {
+        this.messageDao = messageDao;
+    }
 }

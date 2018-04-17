@@ -202,8 +202,7 @@ public class AccountModule {
     @At
     @Ok("json")
     @Filters(@By(type= AccessControlFilter.class))
-    public Object login(@Param("username") String username, @Param("password") String password,
-                        HttpServletResponse response) {
+    public Object login(@Param("username") String username, @Param("password") String password) {
         CommonResult result = null;
         //check username is right username or mobile number
         if ((result =ValidateUtil.checkAccount(username)) != null) {

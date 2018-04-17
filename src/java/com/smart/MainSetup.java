@@ -2,6 +2,7 @@ package com.smart;
 
 import com.smart.dao.AccountDao;
 import com.smart.dao.DaoManager;
+import com.smart.dao.MessageDao;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.nutz.dao.Dao;
@@ -26,6 +27,7 @@ public class MainSetup implements Setup {
         Ioc ioc = conf.getIoc();
         Dao dao = ioc.get(Dao.class, "dao");
         DaoManager.getInstance().setAccountDao(ioc.get(AccountDao.class,"accountDao"));
+        DaoManager.getInstance().setMessageDao(ioc.get(MessageDao.class, "messageDao"));
         //force: recreate table if the table exist
         Daos.createTablesInPackage(dao,"com.smart.bean",false);
         logger.info("connect database completely");
