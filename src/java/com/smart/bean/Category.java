@@ -18,7 +18,7 @@ public class Category {
     private String cateName;
 
     @Column("level")
-    @Comment("分类级别：1(一级) 2(二级)")
+    @Comment("分类级别：1(一级) 2(二级) 3(三级)")
     private String level;
 
     @Column("father_category")

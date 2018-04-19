@@ -30,7 +30,7 @@ public class QueryCnd {
     private Integer queryType;
 
     public Condition getCnd() {
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         Condition cnd = null;
         switch (queryType) {
             case QueryType.USER :

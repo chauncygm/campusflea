@@ -24,5 +24,4 @@ public class Log {
         logger.info(String.format(ERROR + message, params));
     }
 
-
 }

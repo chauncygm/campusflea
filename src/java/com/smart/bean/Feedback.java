@@ -27,14 +27,20 @@ public class Feedback {
     @Comment("内容")
     private String content;
 
-    public Feedback() {
+    @Column("pictures")
+    @Comment("反馈图片")
+    private String pictures;
 
-    }
+    @Column("grade")
+    @Comment("评分")
+    private String grade;
+
+    public Feedback() {}
 
     public Feedback(int userId, String content) {
         this.userId = userId;
         this.content = content;
-        this.createTime = new Date().getTime();
+        this.createTime = System.currentTimeMillis();
     }
 
     public int getFeedbackId() {
@@ -69,13 +75,31 @@ public class Feedback {
         content = content;
     }
 
+    public String getPictures() {
+        return pictures;
+    }
+
+    public void setPictures(String pictures) {
+        this.pictures = pictures;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
     @Override
     public String toString() {
         return "Feedback{" +
                 "feedbackId=" + feedbackId +
                 ", userId=" + userId +
                 ", createTime=" + createTime +
-                ", Content='" + content + '\'' +
+                ", content='" + content + '\'' +
+                ", pictures='" + pictures + '\'' +
+                ", grade='" + grade + '\'' +
                 '}';
     }
 }

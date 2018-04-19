@@ -45,10 +45,6 @@ public class User {
     @Comment("收藏数")
     private int collections;
 
-    @Column("like_list")
-    @Comment("我的喜欢")
-    private String likeList;
-
     @Column("collection_list")
     @Comment("我的收藏")
     private String collectionList;
@@ -129,14 +125,6 @@ public class User {
         this.collections = collections;
     }
 
-    public String getLikeList() {
-        return likeList;
-    }
-
-    public void setLikeList(String likeList) {
-        this.likeList = likeList;
-    }
-
     public String getCollectionList() {
         return collectionList;
     }
@@ -165,7 +153,6 @@ public class User {
                 ", friends='" + friends + '\'' +
                 ", likes=" + likes +
                 ", collections=" + collections +
-                ", likeList='" + likeList + '\'' +
                 ", collectionList='" + collectionList + '\'' +
                 ", creditScore=" + creditScore +
                 '}';
