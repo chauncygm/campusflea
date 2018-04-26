@@ -22,6 +22,18 @@ public class User {
     @Comment("真实姓名")
     private String realname = "";
 
+    @Column("sex")
+    @Comment("性别（0：女，1：男）")
+    private int sex;
+
+    @Column("email")
+    @Comment("邮箱")
+    private int email;
+
+    @Column("area_id")
+    @Comment("所在区域")
+    private int areaId;
+
     @Column("campus_id")
     @Comment("学校id")
     private int campusId;
@@ -40,6 +52,10 @@ public class User {
     @Column("likes")
     @Comment("点赞数")
     private int likes;
+
+    @Column("like_list")
+    @Comment("点赞列表")
+    private String likeList;
 
     @Column("collections")
     @Comment("收藏数")
@@ -75,6 +91,30 @@ public class User {
 
     public void setRealname(String realname) {
         this.realname = realname;
+    }
+
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public int getEmail() {
+        return email;
+    }
+
+    public void setEmail(int email) {
+        this.email = email;
+    }
+
+    public int getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(int areaId) {
+        this.areaId = areaId;
     }
 
     public int getCampusId() {
@@ -117,6 +157,14 @@ public class User {
         this.likes = likes;
     }
 
+    public String getLikeList() {
+        return likeList;
+    }
+
+    public void setLikeList(String likeList) {
+        this.likeList = likeList;
+    }
+
     public int getCollections() {
         return collections;
     }
@@ -147,11 +195,15 @@ public class User {
                 "userId=" + userId +
                 ", nickname='" + nickname + '\'' +
                 ", realname='" + realname + '\'' +
+                ", sex=" + sex +
+                ", email=" + email +
+                ", areaId=" + areaId +
                 ", campusId=" + campusId +
                 ", avatar='" + avatar + '\'' +
                 ", introduce='" + introduce + '\'' +
                 ", friends='" + friends + '\'' +
                 ", likes=" + likes +
+                ", likeList='" + likeList + '\'' +
                 ", collections=" + collections +
                 ", collectionList='" + collectionList + '\'' +
                 ", creditScore=" + creditScore +

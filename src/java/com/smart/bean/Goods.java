@@ -31,7 +31,7 @@ public class Goods {
     private String title;
 
     @Column("subtitle")
-    @Comment("副标题")
+    @Comment("简介")
     private String subTitle;
 
     @Column("primary_price")
