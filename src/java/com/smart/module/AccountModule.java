@@ -270,7 +270,8 @@ public class AccountModule {
     @At
     @Ok("json")
     @Filters({@By(type = AuthFilter.class),@By(type= AccessControlFilter.class)})
-    public CommonResult testtoken(@Param("id") String id) {
+    public CommonResult tokenLogin(@Param("id") String id) {
+        logger.info(id + "token login success!");
         return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok");
     }
 
