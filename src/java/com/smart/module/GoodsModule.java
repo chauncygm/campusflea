@@ -1,9 +1,11 @@
 package com.smart.module;
 
+import com.smart.bean.Category;
 import com.smart.bean.Comments;
 import com.smart.bean.Goods;
 import com.smart.bean.User;
 import com.smart.common.Constant;
+import com.smart.dao.CategoryDao;
 import com.smart.dao.CommentDao;
 import com.smart.dao.GoodsDao;
 import com.smart.dao.UserDao;
@@ -40,6 +42,15 @@ public class GoodsModule {
 
     @Inject
     private CommentDao commentDao;
+
+    @Inject
+    private CategoryDao categoryDao;
+
+    @At
+    public Object getCategory() {
+
+        return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok");
+    }
 
     /**
      * put goods info
