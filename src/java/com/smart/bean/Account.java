@@ -7,7 +7,7 @@ import java.util.Date;
 @Table("t_account")
 public class Account {
 
-    @Id
+    @Id(auto = false)
     @Column("account_id")
     @Comment("账号id")
     private int accountId;
@@ -35,7 +35,8 @@ public class Account {
 
     public Account() {}
 
-    public Account(String username, String mobile, String password) {
+    public Account(int accountId, String username, String mobile, String password) {
+        this.accountId = accountId;
         this.isEffect = 1;
         this.username = username;
         this.mobile = mobile;

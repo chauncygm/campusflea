@@ -9,14 +9,14 @@ import org.nutz.dao.entity.annotation.Table;
 @Table("t_user")
 public class User {
 
-    @Id
+    @Id(auto = false)
     @Column("user_id")
     @Comment("用户id")
     private int userId;
 
     @Column("nick_name")
     @Comment("用户昵称")
-    private String nickname = RUtil.UUID();
+    private String nickname = "";
 
     @Column("real_name")
     @Comment("真实姓名")
@@ -24,19 +24,23 @@ public class User {
 
     @Column("sex")
     @Comment("性别（0：女，1：男）")
-    private int sex;
+    private int sex = 1;
 
     @Column("email")
     @Comment("邮箱")
-    private int email;
+    private String email = "";
+
+    @Column("mobile")
+    @Comment("手机号")
+    private String mobile = "";
 
     @Column("area_id")
     @Comment("所在区域")
-    private int areaId;
+    private int areaId = 0;
 
     @Column("campus_id")
     @Comment("学校id")
-    private int campusId;
+    private int campusId = 0;
 
     @Column("avatar")
     @Comment("头像")
@@ -49,21 +53,25 @@ public class User {
     @Column("friends")
     private String friends = "";
 
+    @Column("publishs")
+    @Comment("发布数")
+    private int publishs = 0;
+
     @Column("likes")
     @Comment("点赞数")
-    private int likes;
+    private int likes = 0;
 
     @Column("like_list")
     @Comment("点赞列表")
-    private String likeList;
+    private String likeList = "";
 
     @Column("collections")
     @Comment("收藏数")
-    private int collections;
+    private int collections = 0;
 
     @Column("collection_list")
     @Comment("我的收藏")
-    private String collectionList;
+    private String collectionList = "";
 
     @Column("credit_score")
     @Comment("信用积分")
@@ -101,12 +109,20 @@ public class User {
         this.sex = sex;
     }
 
-    public int getEmail() {
+    public String getEmail() {
         return email;
     }
 
-    public void setEmail(int email) {
+    public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public int getAreaId() {
@@ -147,6 +163,14 @@ public class User {
 
     public void setFriends(String friends) {
         this.friends = friends;
+    }
+
+    public int getPublishs() {
+        return publishs;
+    }
+
+    public void setPublishs(int publishs) {
+        this.publishs = publishs;
     }
 
     public int getLikes() {
@@ -196,12 +220,14 @@ public class User {
                 ", nickname='" + nickname + '\'' +
                 ", realname='" + realname + '\'' +
                 ", sex=" + sex +
-                ", email=" + email +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
                 ", areaId=" + areaId +
                 ", campusId=" + campusId +
                 ", avatar='" + avatar + '\'' +
                 ", introduce='" + introduce + '\'' +
                 ", friends='" + friends + '\'' +
+                ", publishs=" + publishs +
                 ", likes=" + likes +
                 ", likeList='" + likeList + '\'' +
                 ", collections=" + collections +

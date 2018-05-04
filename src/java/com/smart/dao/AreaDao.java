@@ -15,21 +15,21 @@ public class AreaDao {
     private NutDao dao;
 
     /**
+     * get Area by id
+     * @param id
+     * @return
+     */
+    public Area getArea(int id) {
+        return dao.fetch(Area.class, id);
+    }
+
+    /**
      * get sub area by father area
      * @param areaId
      * @return
      */
     public List<Area> getSubArea(int areaId) {
         Cnd cnd = Cnd.where("father_area", "=", areaId);
-        return dao.query(Area.class, cnd);
-    }
-
-    /**
-     * get root area
-     * @return
-     */
-    public List<Area> getArea() {
-        Cnd cnd = Cnd.where("level", "=", 1);
         return dao.query(Area.class, cnd);
     }
 

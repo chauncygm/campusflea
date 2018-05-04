@@ -22,7 +22,12 @@ public class UserDao {
      * @return
      */
     public boolean isExist(int id) {
-        return dao.count(User.class, Cnd.where("id", "=", id)) > 0;
+        return dao.count(User.class, Cnd.where("user_id", "=", id)) > 0;
+    }
+
+
+    public void insert(User user) {
+        dao.insert(user);
     }
 
     /**

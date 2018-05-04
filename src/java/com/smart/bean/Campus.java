@@ -11,30 +11,30 @@ public class Campus {
     @Id
     @Column("campus_id")
     @Comment("学校id")
-    private int id;
+    private int campusId;
 
     @Column("campus_name")
     @Comment("学校名")
-    private String name;
+    private String campusName;
 
     @Column("area_id")
     @Comment("所在区域")
     private int areaId;
 
-    public int getId() {
-        return id;
+    public int getCampusId() {
+        return campusId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCampusId(int campusId) {
+        this.campusId = campusId;
     }
 
-    public String getName() {
-        return name;
+    public String getCampusName() {
+        return campusName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCampusName(String campusName) {
+        this.campusName = campusName;
     }
 
     public int getAreaId() {

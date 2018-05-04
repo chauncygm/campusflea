@@ -18,11 +18,8 @@ public class WebSockect {
     private static final ConcurrentHashMap<String, WebSockect> socketSessionMap = new ConcurrentHashMap<String, WebSockect>();
 
     private Session session;
-
     private int mid;
-
     private int oid;
-
     private String key;
 
     @OnOpen

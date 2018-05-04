@@ -4,7 +4,9 @@ import com.smart.bean.Account;
 import com.smart.bean.User;
 import org.apache.log4j.Logger;
 import org.nutz.dao.Cnd;
+import org.nutz.dao.Sqls;
 import org.nutz.dao.impl.NutDao;
+import org.nutz.dao.sql.Sql;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 
@@ -15,6 +17,17 @@ public class AccountDao {
 
     @Inject
     private NutDao dao;
+
+    /**
+     * get the max id
+     * @return
+     */
+    public int getMax() {
+        Sql sql = Sqls.create("select max(account_id) from t_account");
+        sql.setCallback(Sqls.callback.integer());
+        dao.execute(sql);
+        return sql.getInt();
+    }
 
     /**
      * check the username has been used

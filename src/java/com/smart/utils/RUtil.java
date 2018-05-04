@@ -18,7 +18,7 @@ public class RUtil {
     private static final String UPPER_CASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     public static String UUID() {
-        return UUID.randomUUID().toString().substring(24, 36);
+        return UUID.randomUUID().toString().substring(28, 36);
     }
 
     /**

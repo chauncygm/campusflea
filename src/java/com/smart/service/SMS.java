@@ -36,19 +36,16 @@ public class SMS {
     private static final String MD5KEY = "311838C12438D924D61AC986793DA49D";
 
     public static boolean sendCaptchaCode(String mobile, String code) {
-
         NameValuePair[] data ={
                 new NameValuePair("Uid", UID),
                 new NameValuePair("KeyMD5", MD5KEY),
                 new NameValuePair("smsMob", mobile),
                 new NameValuePair("smsText","验证码：" + code)
         };
-
         HttpClient client = new HttpClient();
         PostMethod post = new PostMethod(URI);
         post.addRequestHeader(HEADERNAME, HEADERVALUE);
         post.setRequestBody(data);
-
         try {
             //execute send message
             client.executeMethod(post);
@@ -63,8 +60,6 @@ public class SMS {
             }
         } catch (IOException e) {
             logger.info(String.format("SMS : mobile [ %s ] code [ %s ]", mobile, code));
-        } finally {
-            post.releaseConnection();
         }
         return false;
     }

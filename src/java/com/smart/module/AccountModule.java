@@ -1,8 +1,10 @@
 package com.smart.module;
 
 import com.smart.bean.Account;
+import com.smart.bean.User;
 import com.smart.common.Constant;
 import com.smart.dao.AccountDao;
+import com.smart.dao.UserDao;
 import com.smart.filter.AccessControlFilter;
 import com.smart.filter.AuthFilter;
 import com.smart.service.SMS;
@@ -13,6 +15,8 @@ import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
+import org.nutz.trans.Atom;
+import org.nutz.trans.Trans;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +43,9 @@ public class AccountModule {
 
     @Inject
     private AccountDao accountDao;
+
+    @Inject
+    private UserDao userDao;
 
     /**
      * check the username
@@ -149,7 +156,8 @@ public class AccountModule {
         try {
             //md5 encrypt the password with the salt(create time);
             String pswd = Md5Util.md5(loginPara.getPassword() + String.valueOf(now));
-            Account account = new Account(loginPara.getUsername(), loginPara.getMobile(), pswd);
+            int id = accountDao.getMax() + 1;
+            Account account = new Account(id, loginPara.getUsername(), loginPara.getMobile(), pswd);
             account.setCreatTime(now);
             accountDao.insert(account);
             logger.info("[ok] regist succeed : " + loginPara);
