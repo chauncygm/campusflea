@@ -1,13 +1,12 @@
 package com.smart.dao;
 
-import com.smart.bean.Message;
-
 public class DaoManager {
 
     /**
      * 枚举实现单例
      */
     private DaoManager(){}
+
     private enum Singleton{
         INSTANCE;
         DaoManager processor = new DaoManager();
@@ -15,6 +14,7 @@ public class DaoManager {
             return processor;
         }
     }
+
     public static DaoManager getInstance() {
         return Singleton.INSTANCE.getProcessor();
     }

@@ -1,61 +1,37 @@
-package com.smart.to;
+package com.smart.dto;
 
 import java.util.List;
-import java.util.Map;
 
 public class CategoryInfo {
 
-    private String supName;
+    private String name;
 
-    private Map<String, List<Category>> info;
+    private String picture;
 
-    public String getSupName() {
-        return supName;
+    private List<CategoryInfo> subCategory;
+
+    public String getName() {
+        return name;
     }
 
-    public void setSupName(String supName) {
-        this.supName = supName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public Map<String, List<Category>> getInfo() {
-        return info;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setInfo(Map<String, List<Category>> info) {
-        this.info = info;
-    }
-}
-
-class Category {
-
-    private int id;
-
-    private String pic;
-
-    private String subName;
-
-    public int getId() {
-        return id;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public List<CategoryInfo> getSubCategory() {
+        return subCategory;
     }
 
-    public String getPic() {
-        return pic;
-    }
-
-    public void setPic(String pic) {
-        this.pic = pic;
-    }
-
-    public String getSubName() {
-        return subName;
-    }
-
-    public void setSubName(String subName) {
-        this.subName = subName;
+    public void setSubCategory(List<CategoryInfo> subCategory) {
+        this.subCategory = subCategory;
     }
 }
 

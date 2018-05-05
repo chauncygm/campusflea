@@ -4,6 +4,7 @@ import com.smart.bean.Message;
 import com.smart.common.Constant;
 import com.smart.dao.MessageDao;
 import com.smart.dao.UserDao;
+import com.smart.dto.MessageInfo;
 import com.smart.filter.AuthFilter;
 import com.smart.struct.CommonResult;
 import com.smart.utils.FileUtil;
@@ -33,12 +34,17 @@ public class ChatModule {
     @Inject
     private UserDao userDao;
 
-    /**
-     * query history message
-     */
     @At
     @Ok("json")
-    @Filters(@By(type= AuthFilter.class))
+    @Filters(@By(type=AuthFilter.class))
+    public Object getMsgList(@Param("id") int id) {
+        List<MessageInfo> msgInfo = null;
+        return null;
+    }
+
+    @At
+    @Ok("json")
+    @Filters(@By(type=AuthFilter.class))
     public Object history(@Param("id") int id, @Param("oid") int oid, Pager pager) {
         if (!userDao.isExist(oid)) {
             return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "oid not exist");
@@ -49,14 +55,14 @@ public class ChatModule {
             QueryResult result = new QueryResult(messages, pager);
             return new CommonResult(Constant.RESCODE_REQUEST_OK, "get history message succeed", result);
         } catch (Exception e) {
-            logger.error("get history message faild:id[" + id + "] oid[" + oid + "]");
+            logger.error(String.format("get history message faild : id[%s] oid[%s]", id, oid));
         }
         return new CommonResult(Constant.RESCODE_REQUEST_ERROR, "unknow error");
     }
 
     @At
     @Ok("json")
-    @AdaptBy(type = UploadAdaptor.class)
+    @AdaptBy(type=UploadAdaptor.class)
     public Object uploadImg(@Param("picture")TempFile picture, HttpServletRequest request) {
         String relativePath = "/upload/msgImg/";
         String path = request.getServletContext().getRealPath(relativePath);

@@ -48,7 +48,6 @@ public class GoodsModule {
 
     @At
     public Object getCategory() {
-
         return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok");
     }
 

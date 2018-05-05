@@ -23,7 +23,7 @@ public class DaoTest extends Assert {
     }
 
     @After
-    public void after() throws Exception {
+    public void after() {
         if (ioc != null) {
             ioc.depose();
         }

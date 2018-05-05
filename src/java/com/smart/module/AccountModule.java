@@ -1,13 +1,11 @@
 package com.smart.module;
 
 import com.smart.bean.Account;
-import com.smart.bean.User;
 import com.smart.common.Constant;
 import com.smart.dao.AccountDao;
 import com.smart.dao.UserDao;
 import com.smart.filter.AccessControlFilter;
 import com.smart.filter.AuthFilter;
-import com.smart.service.SMS;
 import com.smart.struct.CommonResult;
 import com.smart.struct.LoginPara;
 import com.smart.utils.*;
@@ -15,12 +13,8 @@ import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
 import org.nutz.mvc.annotation.*;
-import org.nutz.trans.Atom;
-import org.nutz.trans.Trans;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.rmi.AccessException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -61,7 +55,7 @@ public class AccountModule {
             logger.info("[error] username check failed : " +username);
             return result;
         }
-        if (accountDao.checkUserName(username)) {
+        if (accountDao.checkUserNameExist(username)) {
             logger.info("[error] username has been used : " + username);
             return  new CommonResult(Constant.RECODE_USERNAME_USED, "the username has been used");
         }
@@ -82,7 +76,7 @@ public class AccountModule {
             logger.info("[error] mobile checked failed : " + mobile);
             return new CommonResult(Constant.RESCODE_CHECKPARAM_ERROR, "the mobile number is empty or null");
         }
-        if (!accountDao.checkMobileNumber(mobile)) {
+        if (!accountDao.checkMobileNumberExist(mobile)) {
             logger.info("[error] mobile has registed : " +mobile);
             return new CommonResult(Constant.RESCODE_MOBILE_HASREGISTERD, "the mobile number has be register");
         }
@@ -130,11 +124,11 @@ public class AccountModule {
             return result;
         }
         //check user name
-        if (accountDao.checkUserName(loginPara.getUsername())) {
+        if (accountDao.checkUserNameExist(loginPara.getUsername())) {
             logger.info("[error] username has been used : " + loginPara.getUsername());
             return  new CommonResult(Constant.RECODE_USERNAME_USED, "the username has been used");
         }
-        if (accountDao.checkMobileNumber(loginPara.getMobile())) {
+        if (accountDao.checkMobileNumberExist(loginPara.getMobile())) {
             logger.info("[error] mobile has been regist : " + loginPara.getUsername());
             return new CommonResult(Constant.RESCODE_MOBILE_HASREGISTERD, "the mobile has been regist");
         }
@@ -156,7 +150,7 @@ public class AccountModule {
         try {
             //md5 encrypt the password with the salt(create time);
             String pswd = Md5Util.md5(loginPara.getPassword() + String.valueOf(now));
-            int id = accountDao.getMax() + 1;
+            int id = accountDao.getMaxId() + 1;
             Account account = new Account(id, loginPara.getUsername(), loginPara.getMobile(), pswd);
             account.setCreatTime(now);
             accountDao.insert(account);

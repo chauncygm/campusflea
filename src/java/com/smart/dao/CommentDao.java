@@ -14,19 +14,10 @@ public class CommentDao {
     @Inject
     public NutDao dao;
 
-    /**
-     * insert comments
-     * @param comments
-     */
     public void insert(Comments comments) {
         dao.insert(comments);
     }
 
-    /**
-     * list all comment by goods id
-     * @param goodsId
-     * @return
-     */
     public List<Comments> getComment(int goodsId) {
         Cnd cnd = Cnd.where("goods_id", "=", goodsId);
         return dao.query(Comments.class, cnd);

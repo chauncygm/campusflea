@@ -1,4 +1,4 @@
-package com.smart.to;
+package com.smart.dto;
 
 public class MessageInfo {
 

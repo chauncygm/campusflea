@@ -4,7 +4,6 @@ import com.smart.bean.Area;
 import com.smart.bean.Campus;
 import com.smart.bean.Feedback;
 import com.smart.bean.User;
-import com.smart.common.CommonString;
 import com.smart.common.Constant;
 import com.smart.dao.AreaDao;
 import com.smart.dao.CampusDao;
@@ -13,7 +12,7 @@ import com.smart.dao.UserDao;
 import com.smart.filter.AccessControlFilter;
 import com.smart.filter.AuthFilter;
 import com.smart.struct.CommonResult;
-import com.smart.to.UserInfo;
+import com.smart.dto.UserInfo;
 import org.apache.log4j.Logger;
 import org.nutz.ioc.loader.annotation.Inject;
 import org.nutz.ioc.loader.annotation.IocBean;
@@ -46,7 +45,6 @@ public class UserModule {
     @Ok("json")
     @Filters({@By(type=AuthFilter.class)})
     public Object isExist(@Param("id") int id, HttpServletResponse response) {
-        logger.info("?????????????????????????????");
         response.setHeader("Access-Control-Allow-Origin", "*");
         boolean isExist = userDao.isExist(id);
         logger.info("user is exist : " + id + "|" + isExist);
@@ -81,7 +79,7 @@ public class UserModule {
         String province = areaDao.getArea(areaDao.getArea(user.getAreaId()).getFatherArea()).getAreaName();
         String campus = campusDao.getCampusName(user.getCampusId());
         userInfo.setCampus(campus);
-        userInfo.setLocation(province + "·" + city + "·" + campus);
+        userInfo.setLocation(province + "??" + city + "??" + campus);
         logger.info(userInfo.toString());
         return new CommonResult(Constant.RESCODE_REQUEST_OK, "ok", userInfo);
     }

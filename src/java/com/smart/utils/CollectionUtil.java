@@ -1,8 +1,8 @@
 package com.smart.utils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.LineInputStream;
+
+import java.util.*;
 
 public class CollectionUtil {
 
@@ -23,5 +23,15 @@ public class CollectionUtil {
 
     public static void main(String[] args) {
         System.out.println(listStr(Arrays.asList(1,2,3,4,5)));
+
+        List<String> list = new ArrayList<String>();
+        list.add("1");
+        list.add("2");
+        for (String item : list) {
+            if ("1".equals(item)) {
+                list.remove(item);
+            }
+        }
+        System.out.println(listStr(list));
     }
 }

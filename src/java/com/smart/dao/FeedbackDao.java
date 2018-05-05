@@ -18,20 +18,6 @@ public class FeedbackDao {
         dao.insert(feedback);
     }
 
-    /**
-     * query feedback by userId
-     * @param userId
-     * @return
-     */
-    public List<Feedback> findByUserId(int userId) {
-        Cnd cnd = Cnd.where("user_id", "=", userId);
-        return dao.query(Feedback.class, cnd);
-    }
-
-    /**
-     * get all feedback
-     * @return
-     */
     public List<Feedback> listAll() {
         return dao.query(Feedback.class, null);
     }
